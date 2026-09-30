@@ -1,0 +1,49 @@
+# Python
+backend_venv/
+backend_venv311/
+.venv/
+venv/
+__pycache__/
+*.pyc
+backend/scholarship.db
+backend/scholarship.db-*
+backend/scholarship.db.*
+backend/uploads/
+backend/.env
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# Node / mobile (Expo) — mobile/.gitignore also covers node_modules, .env,
+# build output etc. for anything git walks into directly under mobile/;
+# these root-level patterns are defensive duplicates.
+mobile/node_modules/
+mobile/.env
+mobile/.expo/
+mobile/dist/
+mobile/web-build/
+mobile/ios/
+mobile/android/
+
+# Model/package caches — not part of the source tree, defensive in case
+# they're ever created inside the repo rather than alongside it.
+model_cache/
+pip_cache/
+puppeteer_cache/
+.hf_cache/
+
+# Secrets — never commit real credentials; only *.example files are tracked.
+*.env
+!*.env.example
+**/*secrets*
+!**/*secrets*.example
+
+# Claude Code local tooling state (not project source)
+.claude/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/

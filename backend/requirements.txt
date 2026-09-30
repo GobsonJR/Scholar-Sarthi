@@ -1,0 +1,54 @@
+# Requires Python 3.11.x — PaddlePaddle/PaddleOCR do not yet publish
+# prebuilt wheels for Python 3.14. See README.md "Backend setup" for the
+# exact venv commands. (The frontend/tooling have no such constraint; only
+# the backend interpreter matters here.)
+
+fastapi==0.141.1
+uvicorn[standard]==0.54.0
+sqlalchemy==2.1.1
+pydantic==2.13.5
+pydantic-settings==2.15.0
+python-jose[cryptography]==3.5.0
+bcrypt==5.0.0
+python-multipart==0.0.32
+email-validator==2.3.0
+Pillow==12.3.0
+
+# --- Document intelligence pipeline (Phase 4) ---
+opencv-contrib-python==4.10.0.84
+paddlepaddle==3.3.1
+paddleocr==3.7.0
+rapidfuzz==3.14.6
+pymupdf==1.28.2
+
+# --- LayoutLMv3 document understanding (Phase 5) ---
+# torch is intentionally NOT pinned in this file: a plain `pip install -r
+# requirements.txt` resolves it from PyPI's default index, which would pull
+# torch's default (CUDA-bundled, multi-GB) build. Install the CPU build
+# FIRST, from PyTorch's own CPU index, then install this file:
+#   pip install torch==2.14.0 --index-url https://download.pytorch.org/whl/cpu
+#   pip install -r requirements.txt
+#
+# transformers is pinned to 4.44.2, NOT the newer 5.x line Phase 5 originally
+# used. Reason: IndicTrans2's custom remote-code model
+# (ai4bharat/indictrans2-indic-en-dist-200M) was written against
+# transformers' ~4.4x-era internal API (tokenizer attribute handling,
+# `transformers.onnx` still present) and its `trust_remote_code=True` files
+# are not maintained for transformers 5.x — loading it under 5.17.0 raised a
+# real AttributeError deep in tokenizer init, not a simple import path issue.
+# LayoutLMv3 (Phase 5) is a mainline, long-stable architecture and was
+# re-verified working correctly on 4.44.2 after this downgrade — see the
+# Phase 6 section of README.md for the regression check.
+transformers==4.44.2
+sentencepiece==0.2.2
+# IndicTransToolkit has a Cython extension with NO prebuilt Windows wheel —
+# it builds from source and needs a C++ compiler (MSVC Build Tools on
+# Windows; gcc/clang are typically already present on Linux/macOS).
+IndicTransToolkit==1.1.1
+
+# --- Database migrations + PostgreSQL (Phase 7) ---
+alembic==1.20.0
+# psycopg (v3), not the legacy psycopg2 — [binary] pulls a prebuilt wheel so
+# no C compiler/libpq headers are needed. SQLite remains the default for
+# local development; this only matters when DATABASE_URL points at Postgres.
+psycopg[binary]==3.3.6
